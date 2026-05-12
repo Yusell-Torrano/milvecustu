@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>4to Aniversario — Para Muñequita</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:    #080810;
+  --gold:  #c8a86c;
+  --goldb: #e2c578;
+  --cream: #f0e4d0;
+  --text:  #ddd0c0;
+  --muted: #5a4a38;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  color: var(--text);
+  touch-action: manipulation;
+}
+
+/* ─── INTRO SCREEN ─── */
+#intro {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg);
+  z-index: 100;
+  transition: opacity 1.2s ease;
+  padding: 32px;
+}
+#intro.hidden { opacity: 0; pointer-events: none; }
+
+.intro-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(80px, 22vw, 130px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  opacity: 0.18;
+  line-height: 1;
+  animation: pulse 4s ease-in-out infinite;
+}
+.intro-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--cream);
+  text-align: center;
+  margin-top: -12px;
+  margin-bottom: 10px;
+  letter-spacing: 0.03em;
+}
+.intro-sub {
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 52px;
+}
+.btn-start {
+  padding: 16px 44px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.35s, color 0.35s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-start:active {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* ─── SLIDESHOW ─── */
+#show {
+  position: fixed; inset: 0;
+  background: #000;
+}
+
+.slide {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  will-change: transform;
+}
+.slide.visible  { opacity: 1; }
+.slide.kb       { animation: kenburns 8s ease-out forwards; }
+
+@keyframes kenburns {
+  0%   { transform: scale(1)    translate(0, 0); }
+  100% { transform: scale(1.14) translate(-1.5%, -1.5%); }
+}
+@keyframes kenburns2 {
+  0%   { transform: scale(1)    translate(0, 0); }
+  100% { transform: scale(1.14) translate(1.5%, 1%); }
+}
+@keyframes kenburns3 {
+  0%   { transform: scale(1.08) translate(1%, 0); }
+  100% { transform: scale(1)    translate(-1%, -1%); }
+}
+
+/* dark vignette over photos */
+#show::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ─── MESSAGE OVERLAY ─── */
+#msg-overlay {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(8,8,16,0.96);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+  padding: 36px;
+}
+#msg-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.msg-line {
+  width: 36px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 28px;
+}
+.msg-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 6vw, 30px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--cream);
+  text-align: center;
+  line-height: 1.8;
+  max-width: 340px;
+}
+.msg-text em {
+  color: var(--goldb);
+  font-style: normal;
+}
+.msg-author {
+  font-family: 'Raleway', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* ─── COUNTER ─── */
+#counter {
+  position: fixed;
+  bottom: 22px; right: 22px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(200,168,108,0.35);
+  z-index: 60;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes pulse {
+  0%,100% { opacity: 0.18; }
+  50%      { opacity: 0.28; }
+}
+
+/* ─── YOUTUBE (hidden) ─── */
+#yt { position: fixed; width:0; height:0; opacity:0; pointer-events:none; }
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-num">4</div>
+  <div class="intro-title">años contigo</div>
+  <div class="intro-sub">Para muñequita &nbsp;✦&nbsp; con amor</div>
+  <button class="btn-start" id="btnStart">Comenzar &#9654;</button>
+</div>
+
+<!-- SLIDESHOW -->
+<div id="show">
+  <div class="slide" id="slideA"></div>
+  <div class="slide" id="slideB"></div>
+</div>
+
+<!-- MESSAGE -->
+<div id="msg-overlay" id="msgBox">
+  <div class="msg-line"></div>
+  <div class="msg-text" id="msgText"></div>
+  <div class="msg-author" id="msgAuthor"></div>
+</div>
+
+<!-- COUNTER -->
+<div id="counter"><span id="cnt">1</span> / <span id="total">—</span></div>
+
+<!-- YOUTUBE PLAYER -->
+<div id="yt"><div id="yt-player"></div></div>
+
+<script>
+/* ============================================================
+   FOTO IDs DE GOOGLE DRIVE
+   ─────────────────────────────────────────────────────────────
+   Pega aquí el array que te da el Google Apps Script.
+   Formato: solo el ID del archivo (la parte larga de la URL).
+   ============================================================ */
+const PHOTO_IDS = [
+  // PEGA AQUÍ TUS IDs — ejemplo:
+  // "1AbCdEfGhIjKlMnOpQrStUvWxYz12345",
+  // "2BcDeFgHiJkLmNoPqRsTuVwXyZ67890",
+  // ... (166 líneas)
+  "PLACEHOLDER_1",
+  "PLACEHOLDER_2",
+  "PLACEHOLDER_3"
+];
+
+/* ============================================================
+   MENSAJES DE AMOR
+   ============================================================ */
+const MESSAGES = [
+  {
+    text: `Cuatro años eligiéndote cada mañana.\nCuatro años sin dudarlo ni un solo día.\nY todavía me faltan muchos más.`,
+    author: "— tu flaco"
+  },
+  {
+    text: `La misma luna que vimos en Tepoztlán,\nen Italia, en Brujas, en Ixtapa...\nSiempre ella. Y siempre tú a mi lado.`,
+    author: "— bendito destino"
+  },
+  {
+    text: `Mi mayor deseo es que pasen los años\ny te siga pareciendo el sujeto más divertido.\nQue sigamos siendo el uno para el otro.`,
+    author: "— siempre"
+  },
+  {
+    text: `Estoy contento de tenerte en todos lados:\nen mis brazos, en mi vida,\nen mis sueños, en mis planes.`,
+    author: "— Andrés Ixtepan"
+  },
+  {
+    text: `Ha pasado tanto tiempo desde que te dije\nque tu llegada me cambió la vida.\nTe diré algo: lo sigo creyendo.`,
+    author: "— tu flaco"
+  },
+  {
+    text: `No existe algo en este mundo\nque yo no haría\nsolo por verte sonreír.`,
+    author: "— Valentín Gasca"
+  },
+  {
+    text: `Por encima de los retos y el orgullo,\nde la mano del amor,\nserás siempre... mil veces tú.`,
+    author: "— mil veces tú"
+  }
+];
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const PHOTO_DURATION  = 6000;   // ms por foto
+const MSG_DURATION    = 5500;   // ms por mensaje
+const PHOTOS_PER_MSG  = 4;      // fotos entre cada mensaje
+const MAX_PHOTOS      = 50;     // cuántas se seleccionan por sesión
+const KB_VARIANTS     = ['kenburns','kenburns2','kenburns3'];
+const YT_VIDEO_ID     = '8PS3V3oqH7g'; // Manual de lo Prohibido
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let queue    = [];
+let idx      = 0;
+let msgIdx   = 0;
+let active   = 'A';
+let ytPlayer = null;
+let timer    = null;
+
+const slideA   = document.getElementById('slideA');
+const slideB   = document.getElementById('slideB');
+const msgBox   = document.getElementById('msg-overlay');
+const msgText  = document.getElementById('msgText');
+const msgAuth  = document.getElementById('msgAuthor');
+const cntEl    = document.getElementById('cnt');
+const totEl    = document.getElementById('total');
+const intro    = document.getElementById('intro');
+const btnStart = document.getElementById('btnStart');
+
+/* ============================================================
+   SHUFFLE + BUILD QUEUE
+   ============================================================ */
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildQueue(){
+  const shuffled = shuffle(PHOTO_IDS);
+  queue = shuffled.slice(0, Math.min(MAX_PHOTOS, shuffled.length));
+  totEl.textContent = queue.length;
+}
+
+function photoUrl(id){
+  return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+}
+
+/* ============================================================
+   PRELOAD
+   ============================================================ */
+function preload(id){
+  const img = new Image();
+  img.src = photoUrl(id);
+}
+
+/* ============================================================
+   SHOW PHOTO
+   ============================================================ */
+function showPhoto(photoId, onDone){
+  const current  = active === 'A' ? slideA : slideB;
+  const incoming = active === 'A' ? slideB : slideA;
+
+  const kb = KB_VARIANTS[Math.floor(Math.random()*KB_VARIANTS.length)];
+  incoming.style.backgroundImage = `url("${photoUrl(photoId)}")`;
+  incoming.style.animation = 'none';
+  incoming.classList.remove('visible','kb','kenburns2','kenburns3');
+
+  // trigger reflow
+  void incoming.offsetWidth;
+
+  incoming.classList.add('visible');
+  setTimeout(()=>{
+    incoming.style.animationName = kb;
+    incoming.style.animationDuration = `${PHOTO_DURATION + 1500}ms`;
+    incoming.style.animationTimingFunction = 'ease-out';
+    incoming.style.animationFillMode = 'forwards';
+  }, 50);
+
+  setTimeout(()=>{
+    current.classList.remove('visible');
+  }, 100);
+
+  active = active === 'A' ? 'B' : 'A';
+
+  // preload next
+  if(idx + 1 < queue.length) preload(queue[idx + 1]);
+
+  timer = setTimeout(onDone, PHOTO_DURATION);
+}
+
+/* ============================================================
+   SHOW MESSAGE
+   ============================================================ */
+function showMessage(onDone){
+  const m = MESSAGES[msgIdx % MESSAGES.length];
+  msgIdx++;
+
+  msgText.innerHTML = m.text.replace(/\n/g,'<br>');
+  msgAuth.textContent = m.author;
+
+  msgBox.classList.add('visible');
+
+  timer = setTimeout(()=>{
+    msgBox.classList.remove('visible');
+    setTimeout(onDone, 1200);
+  }, MSG_DURATION);
+}
+
+/* ============================================================
+   MAIN LOOP
+   ============================================================ */
+function next(){
+  if(idx >= queue.length){
+    // reshuffle and restart
+    buildQueue();
+    idx = 0;
+  }
+
+  const photoId = queue[idx];
+  cntEl.textContent = idx + 1;
+  idx++;
+
+  // show message every PHOTOS_PER_MSG photos
+  if(idx % PHOTOS_PER_MSG === 0){
+    showPhoto(photoId, ()=>{
+      showMessage(next);
+    });
+  } else {
+    showPhoto(photoId, next);
+  }
+}
+
+/* ============================================================
+   YOUTUBE PLAYER
+   ============================================================ */
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+
+window.onYouTubeIframeAPIReady = function(){
+  ytPlayer = new YT.Player('yt-player', {
+    videoId: YT_VIDEO_ID,
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      loop: 1,
+      playlist: YT_VIDEO_ID,
+      rel: 0,
+      iv_load_policy: 3
+    },
+    events: {
+      onReady: function(e){
+        e.target.setVolume(80);
+      }
+    }
+  });
+};
+
+/* ============================================================
+   START
+   ============================================================ */
+btnStart.addEventListener('click', ()=>{
+  intro.classList.add('hidden');
+
+  // start music
+  if(ytPlayer && ytPlayer.playVideo){
+    ytPlayer.playVideo();
+  } else {
+    // retry a bit later if player not ready yet
+    setTimeout(()=>{
+      if(ytPlayer) ytPlayer.playVideo();
+    }, 1500);
+  }
+
+  buildQueue();
+  setTimeout(next, 800);
+});
+
+</script>
+</body>
+</html>
